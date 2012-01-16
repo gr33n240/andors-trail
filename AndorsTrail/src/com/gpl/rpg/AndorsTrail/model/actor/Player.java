@@ -61,28 +61,27 @@ public final class Player extends Actor {
         initializeNewPlayer(types, dropLists, playerName, Job.JOBS[0]);
     }
 
-    // TODO: Set attributes based on Job.
     public void initializeNewPlayer(final ItemTypeCollection types, final DropListCollection dropLists,
                                     final String playerName, final Job playerJob) {
         CombatTraits combat = new CombatTraits();
-        combat.attackCost = 3;
-        combat.attackChance = 60;
-        combat.criticalChance = 0;
-        combat.criticalMultiplier = 1;
-        combat.damagePotential.set(1, 1);
-        combat.blockChance = 0;
-        combat.damageResistance = 0;
+        combat.attackCost = job.attackCost;
+        combat.attackChance = job.attackChance;
+        combat.criticalChance = job.criticalChance;
+        combat.criticalMultiplier = job.criticalMultiplier;
+        combat.damagePotential.set(job.damagePotential);
+        combat.blockChance = job.blockChance;
+        combat.damageResistance = job.damageResistance;
 
         actorTraits.baseCombatTraits.set(combat);
 
-        actorTraits.maxAP = 10;
-        actorTraits.maxHP = 25;
+        actorTraits.maxAP = job.maxAP;
+        actorTraits.maxHP = job.maxHP;
 
         actorTraits.name = playerName;
         actorTraits.job  = playerJob;
-        actorTraits.moveCost = DEFAULT_PLAYER_MOVECOST;
-        useItemCost = 5;
-        reequipCost = 5;
+        actorTraits.moveCost = job.moveCost;
+        useItemCost = job.useItemCost;
+        reequipCost = job.reequipCost;
 
         level = 1;
         job = job;
