@@ -9,8 +9,8 @@ public abstract class Job {
      * TODO: Figure a better way of generating a unique jobId.
      */
     public static final Job[] JOBS = {
-        new Fighter(  1),
-        new Theif(    2),
+        new Fighter(  0),
+        new Theif(    1),
     };
 
     public static final String[] NAMES = {

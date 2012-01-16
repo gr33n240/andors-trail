@@ -35,7 +35,7 @@ public final class ModelContainer {
 
     public ModelContainer(final DataInputStream src, final WorldContext world,
                           final int fileversion, final Context androidContext) throws IOException {
-        this(AndorsTrailApplication.getApplicationFromActivityContext(androidContext).setup);
+        this(((AndorsTrailApplication) androidContext).setup);
 
         this.player = new Player(src, world, fileversion);
         this.currentMap = world.maps.findPredefinedMap(src.readUTF());

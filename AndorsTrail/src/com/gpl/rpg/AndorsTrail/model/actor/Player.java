@@ -64,7 +64,6 @@ public final class Player extends Actor {
     // TODO: Set attributes based on Job.
     public void initializeNewPlayer(final ItemTypeCollection types, final DropListCollection dropLists,
                                     final String playerName, final Job playerJob) {
-        Log.d(TAG, "initializeNewPlayer(): playerJob: " + playerJob);
         CombatTraits combat = new CombatTraits();
         combat.attackCost = 3;
         combat.attackChance = 60;
@@ -200,8 +199,8 @@ public final class Player extends Actor {
         super(src, world, fileversion, true, null);
         this.lastPosition = new Coord(src, fileversion);
         this.nextPosition = new Coord(src, fileversion);
-        this.job = Job.JOBS[src.readInt()];
         this.level = src.readInt();
+        this.job = Job.JOBS[src.readInt()];
         this.totalExperience = src.readInt();
         this.levelExperience = new Range();
         this.recalculateLevelExperience();
@@ -314,6 +313,7 @@ public final class Player extends Actor {
         lastPosition.writeToParcel(dest, flags);
         nextPosition.writeToParcel(dest, flags);
         dest.writeInt(level);
+        dest.writeInt(job.jobId);
         dest.writeInt(totalExperience);
         inventory.writeToParcel(dest, flags);
         dest.writeInt(useItemCost);
