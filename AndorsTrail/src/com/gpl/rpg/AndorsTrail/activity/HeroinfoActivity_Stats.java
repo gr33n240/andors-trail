@@ -2,6 +2,16 @@ package com.gpl.rpg.AndorsTrail.activity;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.gpl.rpg.AndorsTrail.Dialogs;
 import com.gpl.rpg.AndorsTrail.AndorsTrailApplication;
 import com.gpl.rpg.AndorsTrail.R;
@@ -16,16 +26,9 @@ import com.gpl.rpg.AndorsTrail.view.ItemEffectsView;
 import com.gpl.rpg.AndorsTrail.view.RangeBar;
 import com.gpl.rpg.AndorsTrail.view.TraitsInfoView;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 public final class HeroinfoActivity_Stats extends Activity {
+    private static final String TAG = "HeroinfoActivity_Stats";
+
     private WorldContext world;
 
     private Player player;
@@ -110,6 +113,7 @@ public final class HeroinfoActivity_Stats extends Activity {
     }
 
     private void updateTraits() {
+        Log.d(TAG, "updateTraits(): player.job: " + player.job);
         heroinfo_job.setText(player.job.name);
         heroinfo_level.setText(Integer.toString(player.level));
         heroinfo_totalexperience.setText(Integer.toString(player.totalExperience));
