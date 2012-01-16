@@ -7,6 +7,7 @@ import java.io.IOException;
 import com.gpl.rpg.AndorsTrail.context.WorldContext;
 import com.gpl.rpg.AndorsTrail.model.CombatTraits;
 import com.gpl.rpg.AndorsTrail.model.item.ItemTraits_OnUse;
+import com.gpl.rpg.AndorsTrail.model.job.Job;
 import com.gpl.rpg.AndorsTrail.util.Size;
 
 public class ActorTraits {
@@ -21,6 +22,7 @@ public class ActorTraits {
 	public int maxHP;
 
 	public String name;
+  public Job job;
 	public int moveCost;
 	public final int baseMoveCost;
 
@@ -62,6 +64,7 @@ public class ActorTraits {
 		this.maxAP = src.readInt();
 		this.maxHP = src.readInt();
 		this.name = src.readUTF();
+    this.job = Job.JOBS[src.readInt()];
 		this.moveCost = src.readInt();
 		this.baseCombatTraits = new CombatTraits(src, fileversion);
 		if (fileversion <= 16) {
@@ -77,6 +80,7 @@ public class ActorTraits {
 		dest.writeInt(maxAP);
 		dest.writeInt(maxHP);
 		dest.writeUTF(name);
+    dest.writeInt(job.jobId);
 		dest.writeInt(moveCost);
 		baseCombatTraits.writeToParcel(dest, flags);
 		dest.writeInt(baseMoveCost);

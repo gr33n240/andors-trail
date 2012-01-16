@@ -26,11 +26,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public final class HeroinfoActivity_Stats extends Activity {
-	private WorldContext world;
-	
-	private Player player;
-	
-	private Button levelUpButton;
+    private WorldContext world;
+
+    private Player player;
+
+    private Button levelUpButton;
     private TextView heroinfo_ap;
     private TextView heroinfo_movecost;
     private TraitsInfoView heroinfo_currenttraits;
@@ -38,23 +38,24 @@ public final class HeroinfoActivity_Stats extends Activity {
     private TextView heroinfo_currentconditions_title;
     private ActorConditionList heroinfo_currentconditions;
     private TextView heroinfo_level;
+    private TextView heroinfo_job;
     private TextView heroinfo_totalexperience;
     private RangeBar rangebar_hp;
     private RangeBar rangebar_exp;
     private BaseTraitsInfoView heroinfo_basetraits;
-	
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AndorsTrailApplication app = AndorsTrailApplication.getApplicationFromActivity(this);
         this.world = app.world;
         this.player = world.model.player;
-        
+
         setContentView(R.layout.heroinfo_stats);
-        
+
         ImageView iv = (ImageView) findViewById(R.id.heroinfo_image);
         world.tileManager.setImageViewTile(iv, player);
-        
+
         ((TextView) findViewById(R.id.heroinfo_title)).setText(player.actorTraits.name);
         heroinfo_ap = (TextView) findViewById(R.id.heroinfo_ap);
         heroinfo_movecost = (TextView) findViewById(R.id.heroinfo_movecost);
@@ -63,81 +64,84 @@ public final class HeroinfoActivity_Stats extends Activity {
         heroinfo_currentconditions_title = (TextView) findViewById(R.id.heroinfo_currentconditions_title);
         heroinfo_currentconditions = (ActorConditionList) findViewById(R.id.heroinfo_currentconditions);
         heroinfo_level = (TextView) findViewById(R.id.heroinfo_level);
+        heroinfo_job = (TextView) findViewById(R.id.heroinfo_job);
         heroinfo_totalexperience = (TextView) findViewById(R.id.heroinfo_totalexperience);
-                
+
         rangebar_hp = (RangeBar) findViewById(R.id.heroinfo_healthbar);
         rangebar_hp.init(R.drawable.ui_progress_health, R.string.status_hp);
         rangebar_exp = (RangeBar) findViewById(R.id.heroinfo_expbar);
         rangebar_exp.init(R.drawable.ui_progress_exp, R.string.status_exp);
-        
+
         levelUpButton = (Button) findViewById(R.id.heroinfo_levelup);
         levelUpButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				Dialogs.showLevelUp(HeroinfoActivity_Stats.this);
-				// We disable the button temporarily, so that there is no possibility 
-				//  of clicking it again before the levelup activity has started.
-				// See issue:
-				//  http://code.google.com/p/andors-trail/issues/detail?id=42
-				levelUpButton.setEnabled(false);
-			}
-		});
-        
+            @Override
+            public void onClick(View arg0) {
+                Dialogs.showLevelUp(HeroinfoActivity_Stats.this);
+                // We disable the button temporarily, so that there is no possibility
+                //  of clicking it again before the levelup activity has started.
+                // See issue:
+                //  http://code.google.com/p/andors-trail/issues/detail?id=42
+                levelUpButton.setEnabled(false);
+            }
+        });
+
         heroinfo_basetraits = (BaseTraitsInfoView) findViewById(R.id.heroinfo_basetraits);
     }
 
     @Override
-	protected void onResume() {
-    	super.onResume();
-    	updateTraits();
+    protected void onResume() {
+        super.onResume();
+        updateTraits();
         updateLevelup();
         updateConditions();
     }
-    
-    @Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		switch (requestCode) {
-		case MainActivity.INTENTREQUEST_LEVELUP:
-			break;
-		}
-	}
 
-	private void updateLevelup() {
-		levelUpButton.setEnabled(player.canLevelup());
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case MainActivity.INTENTREQUEST_LEVELUP:
+                break;
+        }
     }
 
-	private void updateTraits() {
-		heroinfo_level.setText(Integer.toString(player.level));
-		heroinfo_totalexperience.setText(Integer.toString(player.totalExperience));
-		heroinfo_ap.setText(player.ap.toString());
+    private void updateLevelup() {
+        levelUpButton.setEnabled(player.canLevelup());
+    }
+
+    private void updateTraits() {
+        heroinfo_job.setText(player.job.name);
+        heroinfo_level.setText(Integer.toString(player.level));
+        heroinfo_totalexperience.setText(Integer.toString(player.totalExperience));
+        heroinfo_ap.setText(player.ap.toString());
         heroinfo_movecost.setText(Integer.toString(player.actorTraits.moveCost));
         rangebar_hp.update(player.health);
         rangebar_exp.update(player.levelExperience);
-        
+
         heroinfo_currenttraits.update(player.combatTraits);
-		ArrayList<ItemTraits_OnUse> effects_hit = new ArrayList<ItemTraits_OnUse>();
-		ArrayList<ItemTraits_OnUse> effects_kill = new ArrayList<ItemTraits_OnUse>();
-		for (int i = 0; i < Inventory.NUM_WORN_SLOTS; ++i) {
-			ItemType type = player.inventory.wear[i];
-			if (type == null) continue;
-			if (type.effects_hit != null) effects_hit.add(type.effects_hit);
-			if (type.effects_kill != null) effects_kill.add(type.effects_kill);
-		}
-		if (effects_hit.isEmpty()) effects_hit = null;
-		if (effects_kill.isEmpty()) effects_kill = null;
-		heroinfo_itemeffects.update(null, null, effects_hit, effects_kill);
-		heroinfo_basetraits.update(player.actorTraits);
+        ArrayList<ItemTraits_OnUse> effects_hit = new ArrayList<ItemTraits_OnUse>();
+        ArrayList<ItemTraits_OnUse> effects_kill = new ArrayList<ItemTraits_OnUse>();
+        for (int i = 0; i < Inventory.NUM_WORN_SLOTS; ++i) {
+            ItemType type = player.inventory.wear[i];
+            if (type == null) continue;
+            if (type.effects_hit != null) effects_hit.add(type.effects_hit);
+            if (type.effects_kill != null) effects_kill.add(type.effects_kill);
+        }
+        if (effects_hit.isEmpty()) effects_hit = null;
+        if (effects_kill.isEmpty()) effects_kill = null;
+        heroinfo_itemeffects.update(null, null, effects_hit, effects_kill);
+        heroinfo_basetraits.update(player.actorTraits);
     }
 
-	private void updateConditions() {
-		if (player.conditions.isEmpty()) {
-			heroinfo_currentconditions_title.setVisibility(View.GONE);
-			heroinfo_currentconditions.setVisibility(View.GONE);
-		} else {
-			heroinfo_currentconditions_title.setVisibility(View.VISIBLE);
-			heroinfo_currentconditions.setVisibility(View.VISIBLE);
-			heroinfo_currentconditions.update(player.conditions);
-		}
-	}
+    private void updateConditions() {
+        if (player.conditions.isEmpty()) {
+            heroinfo_currentconditions_title.setVisibility(View.GONE);
+            heroinfo_currentconditions.setVisibility(View.GONE);
+        } else {
+            heroinfo_currentconditions_title.setVisibility(View.VISIBLE);
+            heroinfo_currentconditions.setVisibility(View.VISIBLE);
+            heroinfo_currentconditions.update(player.conditions);
+        }
+    }
+
 }
