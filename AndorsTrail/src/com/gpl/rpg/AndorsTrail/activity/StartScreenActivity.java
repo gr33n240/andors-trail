@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +40,7 @@ public final class StartScreenActivity extends Activity {
     private Button startscreen_load;
     private TextView startscreen_currenthero;
     private EditText startscreen_enterheroname;
+    private RadioGroup startscreen_selectjob;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -55,6 +58,23 @@ public final class StartScreenActivity extends Activity {
         startscreen_currenthero = (TextView) findViewById(R.id.startscreen_currenthero);
         startscreen_enterheroname = (EditText) findViewById(R.id.startscreen_enterheroname);
         //startscreen_enterheroname.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        // Build the Job select radio buttons.
+        startscreen_selectjob = (RadioGroup) findViewById(R.id.startscreen_selectjob);
+        for (int i = 0; i < Job.JOBS.length; i++) {
+            final Job job = Job.JOBS[i];
+            final RadioButton jobButton = new RadioButton(StartScreenActivity.this);
+
+            jobButton.setId(job.jobId);
+            jobButton.setText(job.name);
+            jobButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(final View view) {
+                    StartScreenActivity.this.job = job;
+                }
+            });
+
+            startscreen_selectjob.addView(jobButton);
+        }
 
         startscreen_continue = (Button) findViewById(R.id.startscreen_continue);
         startscreen_continue.setOnClickListener(new OnClickListener() {
@@ -184,9 +204,11 @@ public final class StartScreenActivity extends Activity {
             startscreen_currenthero.setText(playerName  + ", " + displayInfo);
             startscreen_enterheroname.setText(playerName);
             startscreen_enterheroname.setVisibility(View.GONE);
+            startscreen_selectjob.setVisibility(View.GONE);
         } else {
             startscreen_currenthero.setText(R.string.startscreen_enterheroname);
             startscreen_enterheroname.setVisibility(View.VISIBLE);
+            startscreen_selectjob.setVisibility(View.VISIBLE);
         }
     }
 
@@ -206,38 +228,17 @@ public final class StartScreenActivity extends Activity {
 
     private void createNewGame() {
         final String name = startscreen_enterheroname.getText().toString().trim();
-
-        // Error checking on the character name.
         if (name == null || name.length() <= 0) {
             Toast.makeText(this, R.string.startscreen_enterheroname, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Choose an initial job.
-        // TODO: Move this shit to a proper 'create character' activity.
-        new AlertDialog.Builder(this)
-            .setTitle(R.string.startscreen_choose_job)
-            .setIcon(android.R.drawable.ic_dialog_alert)
-            .setSingleChoiceItems(Job.NAMES, 0, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(final DialogInterface dialog, final int item) {
-                    Log.d(TAG, "createNewGame(): Job: " + Job.JOBS[item]);
-                    job = Job.JOBS[item];
-                }
-            })
-            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(final DialogInterface dialog, final int which) {
-                    Log.d(TAG, "createNewGame(): OK pressed.");
-                    if (job == null) {
-                        Log.w(TAG, "createNewGame(): No job selected.");
-                        Toast.makeText(StartScreenActivity.this, R.string.startscreen_nojobselected, Toast.LENGTH_SHORT).show();
-                    } else {
-                        continueGame(true, 0, name, job);
-                    }
-                }
-            })
-            .create().show();
+        if (job == null) {
+            Toast.makeText(this, R.string.startscreen_nojobselected, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        continueGame(true, 0, name, job);
     }
 
     private void comfirmNewGame() {
