@@ -31,6 +31,11 @@ public final class Player extends Actor {
 
     public static final int DEFAULT_PLAYER_MOVECOST = 6;
 
+    private static final int EXP_base = 55;
+    private static final int EXP_D = 400;
+    private static final int EXP_powbase = 2;
+
+
     public Job job;
 
     public final Coord lastPosition;
@@ -39,7 +44,7 @@ public final class Player extends Actor {
     public int totalExperience;
     public final Range levelExperience; // ranges from 0 to the delta-amount of exp required for next level
     public final Inventory inventory;
-    private final HashMap<String, HashSet<Integer> > questProgress = new HashMap<String, HashSet<Integer> >();
+    private final HashMap<String, HashSet<Integer>> questProgress = new HashMap<String, HashSet<Integer>>();
     public int useItemCost;
     public int reequipCost;
     private final HashMap<Integer, Integer> skillLevels = new HashMap<Integer, Integer>();
@@ -107,14 +112,19 @@ public final class Player extends Actor {
         ActorStatsController.recalculatePlayerCombatTraits(this);
     }
 
-    public boolean hasExactQuestProgress(final QuestProgress progress) { return hasExactQuestProgress(progress.questID, progress.progress); }
+    public boolean hasExactQuestProgress(final QuestProgress progress) {
+        return hasExactQuestProgress(progress.questID, progress.progress);
+    }
+
     public boolean hasExactQuestProgress(final String questID, final int progress) {
         if (!questProgress.containsKey(questID)) return false;
         return questProgress.get(questID).contains(progress);
     }
+
     public boolean hasAnyQuestProgress(final String questID) {
         return questProgress.containsKey(questID);
     }
+
     public boolean addQuestProgress(final QuestProgress progress) {
         if (hasExactQuestProgress(progress.questID, progress.progress)) return false;
         if (!questProgress.containsKey(progress.questID)) questProgress.put(progress.questID, new HashSet<Integer>());
@@ -126,6 +136,7 @@ public final class Player extends Actor {
         int experienceRequiredToReachThisLevel = getRequiredExperience(level);
         levelExperience.set(getRequiredExperienceForNextLevel(level), totalExperience - experienceRequiredToReachThisLevel);
     }
+
     public void addExperience(final int v) {
         totalExperience += v;
         levelExperience.add(v, true);
@@ -138,9 +149,7 @@ public final class Player extends Actor {
         }
         return v;
     }
-    private static final int EXP_base = 55;
-    private static final int EXP_D = 400;
-    private static final int EXP_powbase = 2;
+
     private static int getRequiredExperienceForNextLevel(final int currentLevel) {
         return (int) (EXP_base * Math.pow(currentLevel, EXP_powbase + currentLevel/EXP_D));
     }
@@ -153,9 +162,11 @@ public final class Player extends Actor {
         if (!skillLevels.containsKey(skillID)) return 0;
         else return skillLevels.get(skillID);
     }
+
     public boolean hasSkill(final int skillID) {
         return getSkillLevel(skillID) > 0;
     }
+
     public void addSkillLevel(final int skillID, final boolean requireAvailableSkillpoint) {
         if (requireAvailableSkillpoint) {
             if (!hasAvailableSkillpoints()) return;
@@ -165,17 +176,21 @@ public final class Player extends Actor {
         else skillLevels.put(skillID, skillLevels.get(skillID) + 1);
         ActorStatsController.recalculatePlayerCombatTraits(this);
     }
+
     public boolean nextLevelAddsNewSkillpoint() {
         return thisLevelAddsNewSkillpoint(level + 1);
     }
+
     public static boolean thisLevelAddsNewSkillpoint(final int level) {
         return ((level - Constants.FIRST_SKILL_POINT_IS_GIVEN_AT_LEVEL) % Constants.NEW_SKILL_POINT_EVERY_N_LEVELS == 0);
     }
+
     public static int getExpectedNumberOfSkillpointsForLevel(int level) {
         level -= Constants.FIRST_SKILL_POINT_IS_GIVEN_AT_LEVEL;
         if (level < 0) return 0;
         return 1 + (int) Math.floor((float) level / Constants.NEW_SKILL_POINT_EVERY_N_LEVELS);
     }
+
     public boolean hasAvailableSkillpoints() {
         return availableSkillIncreases > 0;
     }
@@ -185,11 +200,11 @@ public final class Player extends Actor {
         if (v == null) return 0;
         return v;
     }
+
     public void addAlignment(final String faction, final int delta) {
         int newValue = getAlignment(faction) + delta;
         alignments.put(faction, newValue);
     }
-
 
 
     // ====== PARCELABLE ===================================================================
@@ -249,8 +264,10 @@ public final class Player extends Actor {
                 else if ("qbucus_complete".equals(keyName)) addQuestProgress(new QuestProgress("bucus", 100));
             }
         }
+
         this.useItemCost = src.readInt();
         this.reequipCost = src.readInt();
+
         final int size2 = src.readInt();
         for(int i = 0; i < size2; ++i) {
             if (fileversion <= 21) {
@@ -260,6 +277,7 @@ public final class Player extends Actor {
                 this.skillLevels.put(skillID, src.readInt());
             }
         }
+
         this.spawnMap = src.readUTF();
         this.spawnPlace = src.readUTF();
 
