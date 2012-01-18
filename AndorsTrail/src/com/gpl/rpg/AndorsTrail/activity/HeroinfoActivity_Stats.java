@@ -41,6 +41,7 @@ public final class HeroinfoActivity_Stats extends Activity {
     private TextView heroinfo_currentconditions_title;
     private ActorConditionList heroinfo_currentconditions;
     private TextView heroinfo_level;
+    private TextView heroinfo_gender;
     private TextView heroinfo_job;
     private TextView heroinfo_totalexperience;
     private RangeBar rangebar_hp;
@@ -67,6 +68,7 @@ public final class HeroinfoActivity_Stats extends Activity {
         heroinfo_currentconditions_title = (TextView) findViewById(R.id.heroinfo_currentconditions_title);
         heroinfo_currentconditions = (ActorConditionList) findViewById(R.id.heroinfo_currentconditions);
         heroinfo_level = (TextView) findViewById(R.id.heroinfo_level);
+        heroinfo_gender = (TextView) findViewById(R.id.heroinfo_gender);
         heroinfo_job = (TextView) findViewById(R.id.heroinfo_job);
         heroinfo_totalexperience = (TextView) findViewById(R.id.heroinfo_totalexperience);
 
@@ -113,7 +115,7 @@ public final class HeroinfoActivity_Stats extends Activity {
     }
 
     private void updateTraits() {
-        Log.d(TAG, "updateTraits(): player.job: " + player.job);
+        heroinfo_gender.setText(player.gender);
         heroinfo_job.setText(player.job.name);
         heroinfo_level.setText(Integer.toString(player.level));
         heroinfo_totalexperience.setText(Integer.toString(player.totalExperience));

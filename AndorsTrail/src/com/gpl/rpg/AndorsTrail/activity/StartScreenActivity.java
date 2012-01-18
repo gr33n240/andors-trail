@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.RadioButton;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ import com.gpl.rpg.AndorsTrail.Savegames;
 import com.gpl.rpg.AndorsTrail.WorldSetup;
 import com.gpl.rpg.AndorsTrail.Savegames.FileHeader;
 import com.gpl.rpg.AndorsTrail.controller.Constants;
+import com.gpl.rpg.AndorsTrail.model.actor.Actor;
 import com.gpl.rpg.AndorsTrail.model.job.Job;
 
 public final class StartScreenActivity extends Activity {
@@ -33,13 +35,23 @@ public final class StartScreenActivity extends Activity {
 
     public static final int INTENTREQUEST_LOADGAME = 9;
 
-    private Job job;
     private boolean hasExistingGame = false;
+
+    private Job job;
+    private String gender;
+
     private Button startscreen_continue;
     private Button startscreen_newgame;
     private Button startscreen_load;
+
+    private ScrollView startscreen_new_character;
+
     private TextView startscreen_currenthero;
     private EditText startscreen_enterheroname;
+
+    private RadioButton startscreen_gender_male;
+    private RadioButton startscreen_gender_female;
+
     private RadioGroup startscreen_selectjob;
 
     @Override
@@ -58,6 +70,23 @@ public final class StartScreenActivity extends Activity {
         startscreen_currenthero = (TextView) findViewById(R.id.startscreen_currenthero);
         startscreen_enterheroname = (EditText) findViewById(R.id.startscreen_enterheroname);
         //startscreen_enterheroname.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        startscreen_new_character = (ScrollView) findViewById(R.id.startscreen_new_character);
+
+        // Setup the gender select buttons.
+        startscreen_gender_male = (RadioButton) findViewById(R.id.startscreen_gender_male);
+        startscreen_gender_female = (RadioButton) findViewById(R.id.startscreen_gender_female);
+
+        startscreen_gender_male.setOnClickListener(new View.OnClickListener() {
+            public void onClick(final View view) {
+                StartScreenActivity.this.gender = Actor.GENDER_MALE;
+            }
+        });
+        startscreen_gender_female.setOnClickListener(new View.OnClickListener() {
+            public void onClick(final View view) {
+                StartScreenActivity.this.gender = Actor.GENDER_FEMALE;
+            }
+        });
 
         // Build the Job select radio buttons.
         startscreen_selectjob = (RadioGroup) findViewById(R.id.startscreen_selectjob);
@@ -96,16 +125,16 @@ public final class StartScreenActivity extends Activity {
             }
         });
 
-        Button b = (Button) findViewById(R.id.startscreen_about);
-        b.setOnClickListener(new OnClickListener() {
+        final Button startscreen_about = (Button) findViewById(R.id.startscreen_about);
+        startscreen_about.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View view) {
                 startActivity(new Intent(StartScreenActivity.this, AboutActivity.class));
             }
         });
 
-        b = (Button) findViewById(R.id.startscreen_quit);
-        b.setOnClickListener(new OnClickListener() {
+        final Button startscreen_quit = (Button) findViewById(R.id.startscreen_quit);
+        startscreen_quit.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View view) {
                 //comfirmQuit();
@@ -204,11 +233,11 @@ public final class StartScreenActivity extends Activity {
             startscreen_currenthero.setText(playerName  + ", " + displayInfo);
             startscreen_enterheroname.setText(playerName);
             startscreen_enterheroname.setVisibility(View.GONE);
-            startscreen_selectjob.setVisibility(View.GONE);
+            startscreen_new_character.setVisibility(View.GONE);
         } else {
             startscreen_currenthero.setText(R.string.startscreen_enterheroname);
             startscreen_enterheroname.setVisibility(View.VISIBLE);
-            startscreen_selectjob.setVisibility(View.VISIBLE);
+            startscreen_new_character.setVisibility(View.VISIBLE);
         }
     }
 
@@ -223,6 +252,7 @@ public final class StartScreenActivity extends Activity {
         setup.loadFromSlot = loadFromSlot;
         setup.newHeroName = name;
         setup.newHeroJob = job;
+        setup.newHeroGender = gender;
         startActivity(new Intent(this, LoadingActivity.class));
     }
 
@@ -230,6 +260,11 @@ public final class StartScreenActivity extends Activity {
         final String name = startscreen_enterheroname.getText().toString().trim();
         if (name == null || name.length() <= 0) {
             Toast.makeText(this, R.string.startscreen_enterheroname, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (gender == null) {
+            Toast.makeText(this, R.string.startscreen_no_gender_selected, Toast.LENGTH_SHORT).show();
             return;
         }
 

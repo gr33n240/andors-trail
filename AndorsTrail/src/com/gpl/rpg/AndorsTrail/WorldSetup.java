@@ -26,6 +26,7 @@ public final class WorldSetup {
     public boolean isSceneReady = false;
     public String newHeroName;
     public Job newHeroJob;
+    public String newHeroGender;
     private int loadResult;
 
     public WorldSetup(WorldContext world, Context androidContext) {
@@ -117,7 +118,7 @@ public final class WorldSetup {
     private void createNewWorld() {
         Context ctx = androidContext.get();
         world.model = new ModelContainer(this);
-        world.model.player.initializeNewPlayer(world.itemTypes, world.dropLists, newHeroName, newHeroJob);
+        world.model.player.initializeNewPlayer(world.itemTypes, world.dropLists, newHeroName, newHeroGender, newHeroJob);
         Controller.playerRested(world, null);
         MovementController.respawnPlayer(ctx.getResources(), world);
     }

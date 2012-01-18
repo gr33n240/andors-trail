@@ -39,23 +39,64 @@
                 android:id="@+id/startscreen_enterheroname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 android:inputType="textPersonName"
-                />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/startscreen_choose_job"
-                />
-
-            <RadioGroup
-                android:id="@+id/startscreen_selectjob"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:visibility="gone"
                 />
+
+            <ScrollView
+                android:id="@+id/startscreen_new_character"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/startscreen_choose_gender"
+                        />
+
+                    <RadioGroup
+                        android:id="@+id/startscreen_selectgender"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        >
+
+                        <RadioButton
+                            android:id="@+id/startscreen_gender_male"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/startscreen_gender_male"
+                            />
+
+                        <RadioButton
+                            android:id="@+id/startscreen_gender_female"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/startscreen_gender_female"
+                            />
+                    </RadioGroup>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/startscreen_choose_job"
+                        />
+
+                    <RadioGroup
+                        android:id="@+id/startscreen_selectjob"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        />
+                </LinearLayout>
+            </ScrollView>
 
             <TextView
                 android:id="@+id/startscreen_dev_version"
@@ -65,7 +106,6 @@
                 android:text="This is a development version of Andor's Trail. Savegames produced by this version are incompatible with the release version."
                 android:textColor="#880000"
                 android:gravity="center_horizontal"
-                android:visibility="gone"
                 />
 
         </LinearLayout>

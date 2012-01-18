@@ -13,6 +13,10 @@ import com.gpl.rpg.AndorsTrail.util.CoordRect;
 import com.gpl.rpg.AndorsTrail.util.Range;
 
 public class Actor {
+
+    public static final String GENDER_MALE   = "Male";
+    public static final String GENDER_FEMALE = "Female";
+
 	public final ActorTraits actorTraits;
 	public final CombatTraits combatTraits;
 	public final Range ap;

@@ -26,7 +26,7 @@ public final class ModelContainer {
     public ModelContainer(final WorldSetup worldSetup) {
         this.worldSetup = worldSetup;
 
-        this.player = new Player(worldSetup.newHeroJob);
+        this.player = new Player(worldSetup.newHeroGender, worldSetup.newHeroJob);
         this.uiSelections = new InterfaceData();
         this.statistics = new GameStatistics();
     }

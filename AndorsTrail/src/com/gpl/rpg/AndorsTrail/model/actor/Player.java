@@ -35,8 +35,8 @@ public final class Player extends Actor {
     private static final int EXP_D = 400;
     private static final int EXP_powbase = 2;
 
-
     public Job job;
+    public String gender;
 
     public final Coord lastPosition;
     public final Coord nextPosition;
@@ -53,43 +53,41 @@ public final class Player extends Actor {
     public int availableSkillIncreases = 0;
     private final HashMap<String, Integer> alignments = new HashMap<String, Integer>();
 
-    public Player(final Job job) {
+    public Player(final String gender, final Job job) {
         super(new ActorTraits(TileManager.CHAR_HERO, new Size(1, 1), new CombatTraits(), DEFAULT_PLAYER_MOVECOST, null), true);
+        this.gender = gender;
+        this.job = job;
         this.lastPosition = new Coord();
         this.nextPosition = new Coord();
         this.levelExperience = new Range();
         this.inventory = new Inventory();
-        this.job = job;
-    }
-
-    public void initializeNewPlayer(final ItemTypeCollection types, final DropListCollection dropLists, final String playerName) {
-        initializeNewPlayer(types, dropLists, playerName, Job.JOBS[0]);
     }
 
     public void initializeNewPlayer(final ItemTypeCollection types, final DropListCollection dropLists,
-                                    final String playerName, final Job playerJob) {
+                                    final String playerName, final String playerGender, final Job playerJob) {
         CombatTraits combat = new CombatTraits();
-        combat.attackCost = job.attackCost;
-        combat.attackChance = job.attackChance;
-        combat.criticalChance = job.criticalChance;
-        combat.criticalMultiplier = job.criticalMultiplier;
-        combat.damagePotential.set(job.damagePotential);
-        combat.blockChance = job.blockChance;
-        combat.damageResistance = job.damageResistance;
+        combat.attackCost = playerJob.attackCost;
+        combat.attackChance = playerJob.attackChance;
+        combat.criticalChance = playerJob.criticalChance;
+        combat.criticalMultiplier = playerJob.criticalMultiplier;
+        combat.damagePotential.set(playerJob.damagePotential);
+        combat.blockChance = playerJob.blockChance;
+        combat.damageResistance = playerJob.damageResistance;
 
         actorTraits.baseCombatTraits.set(combat);
 
-        actorTraits.maxAP = job.maxAP;
-        actorTraits.maxHP = job.maxHP;
+        actorTraits.maxAP = playerJob.maxAP;
+        actorTraits.maxHP = playerJob.maxHP;
 
         actorTraits.name = playerName;
         actorTraits.job  = playerJob;
-        actorTraits.moveCost = job.moveCost;
-        useItemCost = job.useItemCost;
-        reequipCost = job.reequipCost;
+        actorTraits.moveCost = playerJob.moveCost;
+        useItemCost = playerJob.useItemCost;
+        reequipCost = playerJob.reequipCost;
 
         level = 1;
-        job = job;
+        gender = playerGender;
+        job = playerJob;
         totalExperience = 1;
         availableSkillIncreases = 0;
 
@@ -214,6 +212,7 @@ public final class Player extends Actor {
         this.lastPosition = new Coord(src, fileversion);
         this.nextPosition = new Coord(src, fileversion);
         this.level = src.readInt();
+        this.gender = src.readUTF();
         this.job = Job.JOBS[src.readInt()];
         this.totalExperience = src.readInt();
         this.levelExperience = new Range();
@@ -330,6 +329,7 @@ public final class Player extends Actor {
         lastPosition.writeToParcel(dest, flags);
         nextPosition.writeToParcel(dest, flags);
         dest.writeInt(level);
+        dest.writeUTF(gender);
         dest.writeInt(job.jobId);
         dest.writeInt(totalExperience);
         inventory.writeToParcel(dest, flags);

@@ -50,6 +50,10 @@
 				android:layout_marginBottom="@dimen/section_margin"
 				>
         <TableRow>
+            <TextView android:text="@string/heroinfo_gender" android:layout_marginRight="10sp" />
+            <TextView android:text="@string/heroinfo_gender" android:id="@+id/heroinfo_gender" />
+        </TableRow>
+        <TableRow>
             <TextView android:text="@string/heroinfo_job" android:layout_marginRight="10sp" />
             <TextView android:text="@string/heroinfo_job" android:id="@+id/heroinfo_job" />
         </TableRow>
