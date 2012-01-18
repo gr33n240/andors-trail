@@ -2,9 +2,9 @@ package com.gpl.rpg.AndorsTrail.model.job;
 
 import com.gpl.rpg.AndorsTrail.util.Range;
 
-public final class Theif extends Job {
+public final class Thief extends Job {
 
-    public Theif(final int jobId) {
+    public Thief(final int jobId) {
         super("Thief", jobId);
         this.maxAP = 15;
         this.maxHP = 20;

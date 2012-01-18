@@ -12,11 +12,12 @@ public abstract class Job {
      */
     public static final Job[] JOBS = {
         new Fighter(  0),
-        new Theif(    1),
+        new Thief(    1),
         new Mage(     2),
     };
 
     public final String name;
+    // FIXME: Should probably just make the Job's jobId a static constant.
     public final int jobId;
 
     public int maxAP;
